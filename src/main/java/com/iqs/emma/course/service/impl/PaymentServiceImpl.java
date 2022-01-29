@@ -28,8 +28,7 @@ public class PaymentServiceImpl implements PaymentService {
         );
 
         Long document = paymentModel.getRegister().getStudentModel().getDocument();
-        Long registerId = paymentModel.getRegister().getId();
-        String path = String.format("/student/%s/register/%s/payment/%s", document, registerId, paymentId);
+        String path = String.format("student/%s/payment", document);
 
         files.forEach(file -> {
             String url = aWSS3Client.uploadFile(file, path);

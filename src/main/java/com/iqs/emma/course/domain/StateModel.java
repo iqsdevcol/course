@@ -19,8 +19,4 @@ public class StateModel {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @OneToMany
-    @JoinColumn(name = "state_id")
-    private List<CityModel> cities;
-
 }

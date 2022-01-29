@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity(name = "student")
 @Data
 @NoArgsConstructor
 public class StudentModel {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "document_city_id")
@@ -29,10 +29,6 @@ public class StudentModel {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
     private LocalDateTime creationDate;
-
-    @OneToMany
-    @JoinColumn(name = "register_id")
-    private List<PaymentModel> payments;
 
     public StudentModel(CityModel documentCity, Long document, LocalDate documentDate, String name,
                         String middleName, String lastname, String secondLastname, String email, Long cellphone,

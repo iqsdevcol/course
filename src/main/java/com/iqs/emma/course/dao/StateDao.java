@@ -1,0 +1,11 @@
+package com.iqs.emma.course.dao;
+
+import com.iqs.emma.course.domain.StateModel;
+import com.iqs.emma.course.domain.StatusEnum;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface StateDao extends JpaRepository<StateModel, Long> {
+    List<StateModel> findByStatus(StatusEnum status);
+}

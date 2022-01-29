@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping(path = "/courses")
+@CrossOrigin(origins = "*")
 public class RegisterCourseController {
 
 
