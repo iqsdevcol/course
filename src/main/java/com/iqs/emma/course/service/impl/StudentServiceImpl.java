@@ -7,6 +7,7 @@ import com.iqs.emma.course.domain.PaymentModel;
 import com.iqs.emma.course.domain.RegisterModel;
 import com.iqs.emma.course.domain.StudentModel;
 import com.iqs.emma.course.dto.RegisterCourseDto;
+import com.iqs.emma.course.service.EmailService;
 import com.iqs.emma.course.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,23 +27,29 @@ public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao;
     private final RegisterDao registerDao;
     private final PaymentDao paymentDao;
+    private final EmailService emailService;
 
-    public StudentServiceImpl(StudentDao studentDao, RegisterDao registerDao, PaymentDao paymentDao) {
+    public StudentServiceImpl(StudentDao studentDao, RegisterDao registerDao, PaymentDao paymentDao, EmailService emailService) {
         this.studentDao = studentDao;
         this.registerDao = registerDao;
         this.paymentDao = paymentDao;
+        this.emailService = emailService;
     }
 
     @Override
     @Transactional
     public Long registerCourse(RegisterCourseDto registerCourseDto) {
         validDataForm(registerCourseDto);
+
         StudentModel studentModel = registerCourseDto.toStudentModel();
         StudentModel studentSave = studentDao.save(studentModel);
         RegisterModel register = registerCourseDto.toRegisterModel(studentSave);
         RegisterModel registerSave = registerDao.save(register);
         PaymentModel payment = registerCourseDto.toPaymentModel(registerSave);
         PaymentModel paymentSave = paymentDao.save(payment);
+
+        emailService.sendRegisterCourseMethod(paymentSave);
+
         return paymentSave.getId();
     }
 

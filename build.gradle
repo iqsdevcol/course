@@ -17,11 +17,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.amazonaws:aws-java-sdk:1.11.133'
+	implementation "org.springframework:spring-context-support:5.2.8.RELEASE"
+	implementation "org.springframework.boot:spring-boot-starter-mail:2.5.6"
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.21'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 test {
