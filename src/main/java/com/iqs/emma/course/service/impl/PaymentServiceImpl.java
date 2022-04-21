@@ -3,6 +3,7 @@ package com.iqs.emma.course.service.impl;
 import com.iqs.emma.course.dao.PaymentDao;
 import com.iqs.emma.course.domain.PaymentModel;
 import com.iqs.emma.course.service.AWSS3Client;
+import com.iqs.emma.course.service.EmailService;
 import com.iqs.emma.course.service.PaymentService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,12 +14,15 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
 
     private static final String ERROR_MESSAGE_NOT_FOUND_PAYMENT = "It wasn't found the payment with the ID: %s";
+
     private final AWSS3Client aWSS3Client;
     private final PaymentDao paymentDao;
+    private final EmailService emailService;
 
-    public PaymentServiceImpl(AWSS3Client aWSS3Client, PaymentDao paymentDao) {
+    public PaymentServiceImpl(AWSS3Client aWSS3Client, PaymentDao paymentDao, EmailService emailService) {
         this.aWSS3Client = aWSS3Client;
         this.paymentDao = paymentDao;
+        this.emailService = emailService;
     }
 
     @Override
@@ -34,6 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
             String url = aWSS3Client.uploadFile(file, path);
             paymentModel.setUrl(url);
             paymentDao.save(paymentModel);
+            emailService.sendRegisterCourseWithAttachment(paymentModel,file);
         });
     }
 }

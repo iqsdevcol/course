@@ -48,8 +48,6 @@ public class StudentServiceImpl implements StudentService {
         PaymentModel payment = registerCourseDto.toPaymentModel(registerSave);
         PaymentModel paymentSave = paymentDao.save(payment);
 
-        emailService.sendRegisterCourseMethod(paymentSave);
-
         return paymentSave.getId();
     }
 

@@ -5,10 +5,17 @@ import com.iqs.emma.course.dao.CityDao;
 import com.iqs.emma.course.dao.GradeOptionDao;
 import com.iqs.emma.course.domain.*;
 import com.iqs.emma.course.service.EmailService;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -51,11 +58,36 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void sendRegisterCourseWithAttachment(PaymentModel payment, MultipartFile file) {
+        String email = payment.getRegister().getStudentModel().getEmail();
+        sendMessageWithAttachment(email,SUBJECT_REGISTER_MESSAGE,buildRegisterMessage(payment), file);
+    }
+
+    private void sendMessageWithAttachment(
+            String to, String subject, String text, MultipartFile file) {
+        try {
+            MimeMessage message = emailSender.createMimeMessage();
+
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(text);
+            helper.addAttachment(file.getOriginalFilename(), file);
+            emailSender.send(message);
+            helper.setFrom("noreply@baeldung.com");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void sendRegisterCourseMethod(PaymentModel payment) {
         String email = payment.getRegister().getStudentModel().getEmail();
 //        sendSimpleMessage(email,SUBJECT_REGISTER_MESSAGE,buildRegisterMessage(payment));
         sendSimpleMessage(email,SUBJECT_REGISTER_MESSAGE,buildRegisterMessage(payment));
     }
+
+
 
     private String buildRegisterMessage(PaymentModel payment) {
         RegisterModel register = payment.getRegister();
